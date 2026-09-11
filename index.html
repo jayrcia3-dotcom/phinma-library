@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHINMA Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="#top" aria-label="PHINMA Library home">
+                <span class="brand-mark">PL</span>
+                <span>PHINMA Library</span>
+            </a>
+            <nav class="nav-links" aria-label="Primary navigation">
+                <a class="nav-link active" href="#catalog"><span class="nav-glyph">01</span>Catalog</a>
+                <a class="nav-link admin-only" href="#members"><span class="nav-glyph">02</span>Members</a>
+                <a class="nav-link admin-only" href="#activity"><span class="nav-glyph">03</span>Activity</a>
+            </nav>
+            <div class="sidebar-note">
+                <span class="status-dot"></span>
+                <span>Library desk</span>
+            </div>
+        </aside>
+
+        <main class="main-content" id="top">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">PHINMA Library management</p>
+                    <h1>Welcome to PHINMA Library.</h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="role-label" id="roleLabel">Admin view</span>
+                    <button class="button button-dark admin-only" id="openAddBook" type="button">
+                    <span class="button-icon">+</span> Add book
+                    </button>
+                </div>
+            </header>
+
+            <section class="stats-grid" aria-label="Library overview">
+                <article class="stat-card stat-card-ink">
+                    <div class="stat-label">Total books</div>
+                    <div class="stat-value" id="totalBooks">0</div>
+                    <div class="stat-detail">titles on the shelf</div>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-label">Available</div>
+                    <div class="stat-value" id="availableBooks">0</div>
+                    <div class="stat-detail">ready for borrowing</div>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-label">Borrowed</div>
+                    <div class="stat-value" id="borrowedBooks">0</div>
+                    <div class="stat-detail">with readers</div>
+                </article>
+                <article class="stat-card stat-card-accent">
+                    <div class="stat-label">Circulation</div>
+                    <div class="stat-value" id="circulationRate">0%</div>
+                    <div class="stat-detail">of all titles</div>
+                </article>
+                <article class="stat-card stat-card-member admin-only">
+                    <div class="stat-label">Members</div>
+                    <div class="stat-value" id="memberCount">0</div>
+                    <div class="stat-detail">on file</div>
+                </article>
+            </section>
+
+            <section class="workspace" id="catalog">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow" id="catalogEyebrow">Collection</p>
+                        <h2 id="catalogTitle">Book catalog</h2>
+                    </div>
+                    <div class="catalog-tools">
+                        <label class="search-box" for="searchBooks">
+                            <span class="search-icon">⌕</span>
+                            <input id="searchBooks" type="search" placeholder="Search title, author, or ID" autocomplete="off">
+                        </label>
+                        <select id="statusFilter" aria-label="Filter books by status">
+                            <option value="all">All books</option>
+                            <option value="available">Available</option>
+                            <option value="borrowed">Borrowed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th class="align-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookTableBody"></tbody>
+                    </table>
+                    <div class="empty-state" id="emptyState" hidden>
+                        <div class="empty-mark">∅</div>
+                        <h3>No books found</h3>
+                        <p>Add a title to start building your catalog.</p>
+                        <button class="button button-outline" id="emptyAddBook" type="button">Add your first book</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="membership-section admin-only" id="members">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Membership</p>
+                        <h2>Add a library member</h2>
+                    </div>
+                    <a class="button button-outline" href="register.html?source=phinma">Open registration</a>
+                </div>
+                <div class="membership-grid">
+                    <article class="membership-qr-card">
+                        <div class="membership-qr-copy">
+                            <span class="eyebrow">Scan to join</span>
+                            <h3>PHINMA Library membership</h3>
+                            <p>Scan this code to open the registration form and create a reader record.</p>
+                            <button class="button button-light" id="copyRegistrationLink" type="button">Copy registration link</button>
+                        </div>
+                        <div class="membership-qr" id="memberQrImage" aria-label="PHINMA Library registration QR code"></div>
+                    </article>
+                    <article class="panel member-records-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <p class="eyebrow">People in the system</p>
+                                <h2>Member records</h2>
+                            </div>
+                            <span class="panel-count" id="memberRecordCount">0 records</span>
+                        </div>
+                        <div class="member-list" id="memberList"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="lower-grid admin-only" id="activity">
+                <article class="panel activity-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">Latest activity</p>
+                            <h2>Activity</h2>
+                        </div>
+                        <span class="panel-count" id="activityCount">0 events</span>
+                    </div>
+                    <div class="activity-list" id="activityList"></div>
+                </article>
+            </section>
+
+            <footer class="footer">PHINMA Library <span>•</span> built for quiet, orderly circulation</footer>
+        </main>
+    </div>
+
+    <dialog class="modal" id="bookModal">
+        <form class="modal-card" id="bookForm" method="dialog">
+            <button class="modal-close" id="closeModal" type="button" aria-label="Close">×</button>
+            <p class="eyebrow">New catalog entry</p>
+            <h2>Add a book</h2>
+            <p class="modal-copy">Give this title a home in your collection.</p>
+            <label class="field-label" for="bookTitle">Title</label>
+            <input class="field-input" id="bookTitle" name="title" type="text" placeholder="e.g. The Art of War" required>
+            <label class="field-label" for="bookAuthor">Author</label>
+            <input class="field-input" id="bookAuthor" name="author" type="text" placeholder="e.g. Sun Tzu" required>
+            <div class="modal-actions">
+                <button class="button button-quiet" id="cancelModal" type="button">Cancel</button>
+                <button class="button button-dark" type="submit">Save book</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+</body>
+</html>

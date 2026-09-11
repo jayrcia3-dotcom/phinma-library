@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join PHINMA Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="register-page">
+    <main class="register-shell">
+        <a class="brand register-brand" href="index.html">
+            <span class="brand-mark">PL</span>
+            <span>PHINMA Library</span>
+        </a>
+        <section class="register-layout">
+            <div class="register-intro">
+                <p class="eyebrow">Reader membership</p>
+                <h1>Join the library.</h1>
+                <p class="register-lede">Register once and keep your PHINMA Library details ready whenever you borrow a book.</p>
+                <div class="register-note"><span class="status-dot"></span><span>Registration is open</span></div>
+            </div>
+            <section class="register-card" aria-labelledby="registerTitle">
+                <div id="registrationFormView">
+                    <p class="eyebrow">New member</p>
+                    <h2 id="registerTitle">Create your account</h2>
+                    <p class="modal-copy">Enter your school details so we can create your reader record.</p>
+                    <div class="account-tabs" role="tablist" aria-label="Account access">
+                        <button class="account-tab active" id="newAccountTab" type="button">New account</button>
+                        <button class="account-tab" id="existingAccountTab" type="button">I already have an account</button>
+                    </div>
+                    <form id="registrationForm" data-mode="register">
+                        <label class="field-label" for="memberName">Full name</label>
+                        <input class="field-input" id="memberName" type="text" placeholder="e.g. Maria Santos" required>
+                        <label class="field-label" for="memberEmail">School email</label>
+                        <input class="field-input" id="memberEmail" type="email" placeholder="name@phinmaed.com" required>
+                        <label class="field-label" for="studentId">Student ID</label>
+                        <input class="field-input" id="studentId" type="text" placeholder="e.g. 2026-00123" required>
+                        <label class="field-label" for="memberProgram">Program and year level</label>
+                        <input class="field-input" id="memberProgram" type="text" placeholder="e.g. BSIT, 2nd year" required>
+                        <button class="button button-dark register-submit" id="submitAccount" type="submit">Create library account</button>
+                    </form>
+                    <p class="form-error" id="formError" role="alert" hidden></p>
+                </div>
+                <div class="registration-success" id="registrationSuccess" hidden>
+                    <div class="success-mark">✓</div>
+                    <p class="eyebrow">Account created</p>
+                    <h2>Welcome to PHINMA Library.</h2>
+                    <p class="modal-copy">Your member record is now ready. Keep this ID for library transactions.</p>
+                    <div class="member-id-card">
+                        <span>Member ID</span>
+                        <strong id="createdMemberId">—</strong>
+                    </div>
+                    <div class="success-details" id="successDetails"></div>
+                    <a class="button button-dark register-submit" href="index.html#members">View member records</a>
+                </div>
+            </section>
+        </section>
+        <footer class="footer">PHINMA Library <span>•</span> reader registration</footer>
+    </main>
+    <script src="register.js"></script>
+</body>
+</html>

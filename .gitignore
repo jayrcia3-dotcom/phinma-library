@@ -1,0 +1,4 @@
+library-data.json
+out/
+*.class
+node_modules/
