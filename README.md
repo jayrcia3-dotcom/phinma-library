@@ -57,6 +57,7 @@ http://192.168.100.16:8080
 - `start-library.ps1` - starts the local website server
 - `server.js` - shared local API and website server
 - `DATA-FLOW-DIAGRAM.md` - complete system data flow diagrams
+- `USER-ADMIN-DATA-FLOW.md` - simple User and Admin data flow diagram
 
 ## Existing user login
 
