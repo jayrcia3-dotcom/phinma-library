@@ -4,6 +4,7 @@ const path = require("path");
 const crypto = require("crypto");
 
 const PORT = process.env.PORT || 8080;
+const ADMIN_KEY = process.env.ADMIN_KEY;
 const ROOT = __dirname;
 const DATA_FILE = path.join(ROOT, "library-data.json");
 const seedBooks = [
@@ -32,6 +33,10 @@ function sendJson(response, status, payload) {
     response.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     response.end(JSON.stringify(payload));
 }
+function isAdminRequest(request) {
+    const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+    return ADMIN_KEY && url.searchParams.get("key") === ADMIN_KEY;
+}
 function body(request) {
     return new Promise((resolve, reject) => {
         let content = "";
@@ -46,8 +51,14 @@ function addActivity(type, book) {
 }
 function serveStatic(request, response) {
     if (request.url === "/") {
-        response.writeHead(302, { Location: "/index.html?view=admin#catalog" });
+        response.writeHead(302, { Location: "/register.html?source=phinma" });
         response.end();
+        return;
+    }
+    const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+    if (url.pathname === "/index.html" && url.searchParams.get("view") === "admin" && !isAdminRequest(request)) {
+        response.writeHead(403, { "Content-Type": "text/plain" });
+        response.end("Admin access requires the private admin link.");
         return;
     }
     const requested = request.url === "/" ? "/index.html" : request.url.split("?")[0];
@@ -77,18 +88,21 @@ const server = http.createServer(async (request, response) => {
             if (!member) return sendJson(response, 404, { error: "Student ID not found. Please create an account first." });
             return sendJson(response, 200, { member });
         }
-        if (request.url === "/api/books" && request.method === "POST") {
+        if (request.url.startsWith("/api/books") && request.method === "POST") {
+            if (!isAdminRequest(request)) return sendJson(response, 403, { error: "Admin access required." });
             const input = await body(request);
             const book = { id: `BK${crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase()}`, title: input.title, author: input.author, borrowed: false, borrowedBy: null };
             data.books.unshift(book); addActivity("add", book); saveData(); return sendJson(response, 201, { book, ...data });
         }
-        if (request.url === "/api/borrow" && request.method === "POST") {
+        if (request.url.startsWith("/api/borrow") && request.method === "POST") {
             const input = await body(request); const book = data.books.find((item) => item.id === input.bookId);
+            if (input.role === "admin" && !isAdminRequest(request)) return sendJson(response, 403, { error: "Admin access required." });
             if (!book || book.borrowed) return sendJson(response, 409, { error: "Book is not available." });
             book.borrowed = true; book.borrowedBy = input.memberId; addActivity("borrow", book); saveData(); return sendJson(response, 200, data);
         }
-        if (request.url === "/api/return" && request.method === "POST") {
+        if (request.url.startsWith("/api/return") && request.method === "POST") {
             const input = await body(request); const book = data.books.find((item) => item.id === input.bookId);
+            if (input.role === "admin" && !isAdminRequest(request)) return sendJson(response, 403, { error: "Admin access required." });
             if (!book || !book.borrowed || (input.role !== "admin" && book.borrowedBy !== input.memberId)) return sendJson(response, 403, { error: "You cannot return this book." });
             book.borrowed = false; book.borrowedBy = null; addActivity("return", book); saveData(); return sendJson(response, 200, data);
         }

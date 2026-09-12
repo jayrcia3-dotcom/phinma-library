@@ -14,7 +14,24 @@ Then open:
 http://localhost:8080
 ```
 
-The computer root address opens the Admin dashboard. Users enter through the registration QR and are redirected to their own User dashboard after registration or Student ID login.
+The computer root address opens the registration page. The Admin dashboard uses a private link with an `ADMIN_KEY`; users enter through the registration QR and are redirected to their own User dashboard after registration or Student ID login.
+
+## Private Admin link
+
+Set an environment variable before starting the server:
+
+```powershell
+$env:ADMIN_KEY = "replace-with-a-long-private-key"
+npm start
+```
+
+Open the Admin dashboard with:
+
+```text
+http://localhost:8080/index.html?view=admin&key=replace-with-a-long-private-key
+```
+
+On Render, add `ADMIN_KEY` under **Environment Variables**, then use the same key in the private Admin URL. Do not share this link publicly.
 
 For phone access, connect the phone and computer to the same Wi-Fi and open:
 

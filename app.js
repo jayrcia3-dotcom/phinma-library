@@ -4,6 +4,7 @@ const MEMBERS_KEY = "phinma-library-members";
 const viewParams = new URLSearchParams(window.location.search);
 const currentView = viewParams.get("view") === "user" ? "user" : "admin";
 const currentMemberId = viewParams.get("member") || "";
+const adminKey = viewParams.get("key") || "";
 
 const seedBooks = [
     { id: "PH10-FIL-001", title: "21st Century Literature from the Philippines and the World", author: "Senior High School Learning Module", borrowed: false },
@@ -60,6 +61,10 @@ function saveState() {
 
 function isAdmin() {
     return currentView === "admin";
+}
+
+function adminApiUrl(path) {
+    return `${path}?key=${encodeURIComponent(adminKey)}`;
 }
 
 async function syncFromServer() {
@@ -173,7 +178,7 @@ function closeModal() {
 
 async function addBook(event) {
     event.preventDefault();
-    const response = await fetch("/api/books", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: elements.title.value.trim(), author: elements.author.value.trim() }) });
+    const response = await fetch(adminApiUrl("/api/books"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: elements.title.value.trim(), author: elements.author.value.trim() }) });
     if (!response.ok) { showToast("Could not add the book."); return; }
     const state = await response.json();
     books = state.books;
@@ -188,7 +193,8 @@ async function toggleBorrow(id) {
     if (!book) return;
     if (!isAdmin() && book.borrowed && book.borrowedBy !== currentMemberId) return;
     const action = book.borrowed ? "return" : "borrow";
-    const response = await fetch(`/api/${action}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bookId: id, memberId: isAdmin() ? "ADMIN" : currentMemberId, role: isAdmin() ? "admin" : "user" }) });
+    const endpoint = isAdmin() ? adminApiUrl(`/api/${action}`) : `/api/${action}`;
+    const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bookId: id, memberId: isAdmin() ? "ADMIN" : currentMemberId, role: isAdmin() ? "admin" : "user" }) });
     const result = await response.json();
     if (!response.ok) { showToast(result.error || "This book is no longer available."); await syncFromServer(); render(); return; }
     books = result.books;
