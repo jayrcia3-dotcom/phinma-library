@@ -56,6 +56,7 @@ http://192.168.100.16:8080
 - `qrcodes/phinma-registration.png` - registration QR code
 - `start-library.ps1` - starts the local website server
 - `server.js` - shared local API and website server
+- `DATA-FLOW-DIAGRAM.md` - complete system data flow diagrams
 
 ## Existing user login
 
