@@ -5,6 +5,7 @@ const formView = document.querySelector("#registrationFormView");
 const successView = document.querySelector("#registrationSuccess");
 const createdMemberId = document.querySelector("#createdMemberId");
 const successDetails = document.querySelector("#successDetails");
+const successDashboardLink = document.querySelector("#successDashboardLink");
 const newAccountTab = document.querySelector("#newAccountTab");
 const existingAccountTab = document.querySelector("#existingAccountTab");
 const submitAccount = document.querySelector("#submitAccount");
@@ -65,6 +66,7 @@ form.addEventListener("submit", async (event) => {
 
         createdMemberId.textContent = member.memberId;
         successDetails.innerHTML = `<strong>${escapeHtml(member.name)}</strong><span>${escapeHtml(member.program)} · ${escapeHtml(member.email)}</span>`;
+        successDashboardLink.href = `index.html?view=user&member=${encodeURIComponent(member.memberId)}#catalog`;
         if (mode === "login") {
             window.location.href = `index.html?view=user&member=${encodeURIComponent(member.memberId)}#catalog`;
             return;

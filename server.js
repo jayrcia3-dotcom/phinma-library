@@ -56,10 +56,18 @@ function serveStatic(request, response) {
         return;
     }
     const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
-    if (url.pathname === "/index.html" && url.searchParams.get("view") === "admin" && !isAdminRequest(request)) {
-        response.writeHead(403, { "Content-Type": "text/plain" });
-        response.end("Admin access requires the private admin link.");
-        return;
+    if (url.pathname === "/index.html") {
+        const view = url.searchParams.get("view");
+        if (view === "admin" && !isAdminRequest(request)) {
+            response.writeHead(403, { "Content-Type": "text/plain" });
+            response.end("Admin access requires the private admin link.");
+            return;
+        }
+        if (!view) {
+            response.writeHead(302, { Location: "/register.html?source=phinma" });
+            response.end();
+            return;
+        }
     }
     const requested = request.url === "/" ? "/index.html" : request.url.split("?")[0];
     const filePath = path.resolve(ROOT, `.${requested}`);

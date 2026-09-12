@@ -2,7 +2,7 @@ const STORAGE_KEY = "library-desk-books";
 const ACTIVITY_KEY = "library-desk-activity";
 const MEMBERS_KEY = "phinma-library-members";
 const viewParams = new URLSearchParams(window.location.search);
-const currentView = viewParams.get("view") === "user" ? "user" : "admin";
+const currentView = viewParams.get("view") === "admin" ? "admin" : "user";
 const currentMemberId = viewParams.get("member") || "";
 const adminKey = viewParams.get("key") || "";
 
